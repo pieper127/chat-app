@@ -16,6 +16,7 @@ Connect({ db });
 
 setupSocket(server);
 
+// tune parameters of the express server
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', apiRouter);
