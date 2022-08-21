@@ -25,18 +25,22 @@ userRouter.post("/register", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const mightBeUser = await User.findOne({ email: req.body.email });
 
-    if (!user) {
+    if (!mightBeUser) {
       res.status(404).json("user can not be found or the password is incorrect");
     }
+    const user = mightBeUser as IUser;
 
-    const validPassword = await bcrypt.compare(req.body.password, (user as IUser).password)
+
+    const validPassword = await bcrypt.compare(req.body.password, user.password)
     if (!validPassword) {
       res.status(404).json("user can not be found or the password is incorrect");
     }
 
-    res.status(200).json(user);
+    const updatedToken = generateJWT({ email: user.email as string, password: user.password});
+
+    res.status(200).json({ ...user, token: updatedToken });
   } catch (err) {
     res.status(500).json(err);
   }

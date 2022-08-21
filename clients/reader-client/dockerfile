@@ -1,0 +1,15 @@
+FROM node:17-alpine
+ENV NODE_ENV=production
+ENV HOST=localhost
+
+WORKDIR /app
+
+COPY ["package.json", "package-lock.json*", "./"]
+
+RUN npm install --production
+
+COPY . .
+
+RUN npm run build
+
+CMD [ "node", "./dist/app.js" ]

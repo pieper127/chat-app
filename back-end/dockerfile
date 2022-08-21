@@ -1,0 +1,16 @@
+FROM node:17-alpine
+ENV NODE_ENV=production
+ENV MONGO_URL = test
+
+WORKDIR /app
+
+COPY ["package.json", "package-lock.json*", "./"]
+
+RUN npm install --production
+RUN npm install socket.io
+
+COPY . .
+
+RUN npm run build
+
+CMD [ "node", "./dist/app.js" ]
