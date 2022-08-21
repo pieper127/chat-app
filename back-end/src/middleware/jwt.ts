@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { Socket } from "socket.io";
-import { IUser } from "../models/User.model";
 import { verifyJWT } from "../api/jwt-service";
 
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
@@ -16,15 +15,6 @@ function authenticateJWT(req: Request, res: Response, next: NextFunction) {
         res
             .status(403)
             .send({ success: false, message: valid.err });
-    }
-}
-
-export function getEmailFromToken(token: string): string {
-    const body = jwt.decode(token);
-    if (body) {
-        return (body as IUser).email as string;
-    } else {
-        return '';
     }
 }
 

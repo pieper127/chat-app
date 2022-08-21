@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { IUser } from "../models/User.model";
 
 const JWT_KEY = process.env.JWT_SECRET || "123456";
 const tokenExpirationInSeconds = 36000;
@@ -24,7 +25,6 @@ interface Ok {
 }
 type Result<T> = Error<T> | Ok;
 export function verifyJWT(token: string | undefined): Result<string> {
-    console.log('token', token);
     if (token && token !== "null") {
         try {
             jwt.verify(token, JWT_KEY);
@@ -36,6 +36,14 @@ export function verifyJWT(token: string | undefined): Result<string> {
                 };
         }
     }
-    console.log('token', token);
     return { ok: false, err: "UnAuthorized" };
+}
+
+export function getEmailFromToken(token: string): string {
+    const body = jwt.decode(token);
+    if (body) {
+        return (body as IUser).email as string;
+    } else {
+        return '';
+    }
 }
